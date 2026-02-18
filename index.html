@@ -3,60 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <title>Age Verification</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <style>
-/* Full-page centered layout */
 body {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
+margin:0;
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 background: linear-gradient(135deg, #4e54c8, #8f94fb);
-color: #fff;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:#fff;
 }
-.container {
-text-align: center;
-background: rgba(0, 0, 0, 0.5);
-padding: 40px 60px;
+.modal {
+background: #2f3136;
+padding: 40px 50px;
 border-radius: 12px;
-box-shadow: 0 0 20px rgba(0,0,0,0.5);
+box-shadow: 0 0 30px rgba(0,0,0,0.6);
+text-align:center;
+max-width:400px;
 }
-h1 {
-font-size: 2rem;
-margin-bottom: 20px;
+.modal h1 {
+font-size:2rem;
+margin-bottom:20px;
+color:#7289da;
 }
-p {
-font-size: 1rem;
-margin-bottom: 30px;
+.modal p {
+font-size:1rem;
+margin-bottom:30px;
 }
 button {
-padding: 12px 25px;
-margin: 0 10px;
-font-size: 1rem;
-border: none;
-border-radius: 6px;
-cursor: pointer;
-transition: all 0.3s ease;
+padding:12px 25px;
+margin:0 10px;
+font-size:1rem;
+border:none;
+border-radius:6px;
+cursor:pointer;
+transition:all 0.3s ease;
 }
 button#yes {
-background-color: #28a745;
-color: #fff;
+background-color:#28a745;
+color:#fff;
 }
-button#yes:hover {
-background-color: #218838;
-}
+button#yes:hover { background-color:#218838; }
 button#no {
-background-color: #dc3545;
-color: #fff;
+background-color:#dc3545;
+color:#fff;
 }
-button#no:hover {
-background-color: #c82333;
-}
+button#no:hover { background-color:#c82333; }
 </style>
 </head>
 <body>
-<div class="container">
+
+<div class="modal">
 <h1>Age Verification</h1>
 <p>Please confirm your age to enter the site:</p>
 <button id="yes">I am 18+</button>
@@ -64,25 +65,40 @@ background-color: #c82333;
 </div>
 
 <script>
-// Function to track clicks in localStorage
-function recordClick(type) {
-let count = localStorage.getItem(type) || 0;
-localStorage.setItem(type, Number(count) + 1);
-}
+// 1️⃣ Initialize Firebase
+const firebaseConfig = {
+apiKey: "AIzaSyAmOHMwo9BYwW7uC7OyvNS55vy6GzljfQQ",
+authDomain: "age-verification-analytics.firebaseapp.com",
+projectId: "age-verification-analytics",
+storageBucket: "age-verification-analytics.firebasestorage.app",
+messagingSenderId: "953938613705",
+appId: "1:953938613705:web:1ed99586573f28e7bbc418"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const counterRef = db.collection("ageVerification").doc("counters");
 
-// Button actions
+// 2️⃣ Button events
 document.getElementById('yes').onclick = function() {
-recordClick('yes'); // track
 alert("Welcome! You are verified as 18+.");
-// optional redirect:
-// window.location.href = "main-site.html";
-}
+// Increment Firebase yesCount
+counterRef.update({ yesCount: firebase.firestore.FieldValue.increment(1) })
+.catch(err => console.log("Error updating yesCount:", err));
+
+// Redirect to main site or hidden page
+// window.location.href = "main.html";
+};
 
 document.getElementById('no').onclick = function() {
-recordClick('no'); // track
 alert("Sorry, you must be 18+ to enter.");
+// Increment Firebase noCount
+counterRef.update({ noCount: firebase.firestore.FieldValue.increment(1) })
+.catch(err => console.log("Error updating noCount:", err));
+
+// Redirect underage users
 window.location.href = "https://www.google.com";
-}
+};
 </script>
+
 </body>
 </html>
