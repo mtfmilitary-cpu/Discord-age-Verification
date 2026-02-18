@@ -64,15 +64,24 @@ background-color: #c82333;
 </div>
 
 <script>
-// Redirect or alert underage users
+// Function to track clicks in localStorage
+function recordClick(type) {
+let count = localStorage.getItem(type) || 0;
+localStorage.setItem(type, Number(count) + 1);
+}
+
+// Button actions
 document.getElementById('yes').onclick = function() {
+recordClick('yes'); // track
 alert("Welcome! You are verified as 18+.");
-// You can redirect verified users if needed:
+// optional redirect:
 // window.location.href = "main-site.html";
 }
+
 document.getElementById('no').onclick = function() {
+recordClick('no'); // track
 alert("Sorry, you must be 18+ to enter.");
-window.location.href = "https://www.google.com"; // redirect underage users
+window.location.href = "https://www.google.com";
 }
 </script>
 </body>
