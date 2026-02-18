@@ -23,19 +23,10 @@ box-shadow: 0 0 25px rgba(0,0,0,0.7);
 text-align: center;
 width: 90%;
 max-width: 500px;
+display: none; /* hidden initially */
 }
-h1 {
-font-size: 2rem;
-margin-bottom: 20px;
-color: #ffdd59;
-}
-.counter {
-margin: 20px 0;
-font-size: 1.5rem;
-background: rgba(255,255,255,0.1);
-padding: 15px;
-border-radius: 10px;
-}
+h1 { font-size: 2rem; margin-bottom: 20px; color: #ffdd59; }
+.counter { margin: 20px 0; font-size: 1.5rem; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }
 button {
 padding: 10px 20px;
 margin: 10px;
@@ -53,7 +44,7 @@ button#incrementNo:hover { background: #c82333; }
 </head>
 <body>
 
-<div class="card" id="dashboard" style="display:none;">
+<div class="card" id="dashboard">
 <h1>Analytics Dashboard</h1>
 <div class="counter">
 ✅ I am 18+: <span id="yesCount">0</span><br>
@@ -63,30 +54,30 @@ button#incrementNo:hover { background: #c82333; }
 <button id="incrementNo">Add Under 18</button>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <script>
+// Wait until DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function() {
+
 const passwordHash = "c6496946812eb09cc274ad3ab7d8150ec4d72f520f38c12dc659cc04040c42b4";
 
-// Prompt user
 let input = prompt("Enter password to view analytics:");
-
-// Remove extra spaces
-input = input.trim();
-
-// Compare hash
-if(sha256(input) !== passwordHash){
+if(!input || sha256(input.trim()) !== passwordHash){
 document.body.innerHTML = "<h2 style='color:red; text-align:center; font-family:Segoe UI;'>Access Denied</h2>";
-} else {
-document.getElementById('dashboard').style.display = "block";
+return;
 }
 
-// Live counter stored in localStorage
+// Password correct → show dashboard
+const dashboard = document.getElementById('dashboard');
+dashboard.style.display = "block";
+
+// Load counters from localStorage
 let yesCount = parseInt(localStorage.getItem('yesCount') || '0');
 let noCount = parseInt(localStorage.getItem('noCount') || '0');
 
 document.getElementById('yesCount').textContent = yesCount;
 document.getElementById('noCount').textContent = noCount;
 
+// Buttons increment
 document.getElementById('incrementYes').onclick = function() {
 yesCount++;
 localStorage.setItem('yesCount', yesCount);
@@ -98,6 +89,7 @@ noCount++;
 localStorage.setItem('noCount', noCount);
 document.getElementById('noCount').textContent = noCount;
 };
+});
 </script>
 
 </body>
