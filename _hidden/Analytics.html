@@ -2,95 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Analytics Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+<title>Discord Age Verification Analytics</title>
 <style>
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-margin: 0;
-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-background: linear-gradient(135deg, #1f1c2c, #928dab);
-color: #fff;
-}
-.card {
-background: rgba(0,0,0,0.6);
-padding: 30px 50px;
-border-radius: 15px;
-box-shadow: 0 0 25px rgba(0,0,0,0.7);
-text-align: center;
-width: 90%;
-max-width: 500px;
-display: none; /* hidden initially */
-}
-h1 { font-size: 2rem; margin-bottom: 20px; color: #ffdd59; }
-.counter { margin: 20px 0; font-size: 1.5rem; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }
-button {
-padding: 10px 20px;
-margin: 10px;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-font-size: 1rem;
-transition: 0.3s ease;
-}
-button#incrementYes { background: #28a745; color: #fff; }
-button#incrementYes:hover { background: #218838; }
-button#incrementNo { background: #dc3545; color: #fff; }
-button#incrementNo:hover { background: #c82333; }
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#36393f;color:#fff;display:flex;height:100vh}
+.app{display:flex;width:100%}
+.sidebar{width:220px;background:#2f3136;border-right:1px solid #202225;padding:20px;box-sizing:border-box}
+.sidebar h2{color:#7289da;margin-top:0;font-size:1.4rem}
+.sidebar button{width:100%;background:none;border:none;color:#b9bbbe;text-align:left;padding:10px 8px;border-radius:6px;cursor:pointer;font-size:14px}
+.sidebar button.active,.sidebar button:hover{background:#40444b;color:#fff}
+.content{flex:1;padding:30px;overflow-y:auto;box-sizing:border-box}
+.page{display:none}
+.page.active{display:block}
+.card{background:#2f3136;border:1px solid #202225;border-radius:10px;padding:25px;margin-bottom:25px}
+.card h3{margin-top:0;color:#7289da;font-size:1.3rem;text-align:center}
+.field{display:flex;justify-content:space-between;margin:12px 0;padding:10px;background:#202225;border-radius:8px;font-size:1rem}
+.label{font-weight:600;color:#b9bbbe}
+.value{color:#fff;font-weight:500}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 </head>
 <body>
+<div class="app">
 
-<div class="card" id="dashboard">
-<h1>Analytics Dashboard</h1>
-<div class="counter">
-✅ I am 18+: <span id="yesCount">0</span><br>
-❌ Under 18: <span id="noCount">0</span>
+<div class="sidebar">
+<h2>Age Verification Analytics</h2>
+<button class="active" onclick="openPage('analytics')">Analytics</button>
 </div>
-<button id="incrementYes">Add I am 18+</button>
-<button id="incrementNo">Add Under 18</button>
+
+<div class="content">
+<div id="analytics" class="page active">
+<div class="card" id="dashboard" style="display:none;">
+<h3>Age Verification Statistics</h3>
+<div class="field"><span class="label">✅ I am 18+:</span> <span class="value" id="yesCount">0</span></div>
+<div class="field"><span class="label">❌ Under 18:</span> <span class="value" id="noCount">0</span></div>
+</div>
+</div>
+</div>
 </div>
 
 <script>
-// Wait until DOM is fully loaded
-document.addEventListener("DOMContentLoaded", function() {
+// Sidebar page switching (single page, kept for future expansion)
+function openPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'))
+document.getElementById(id).classList.add('active')
+event.target.classList.add('active')
+}
 
+// Password protection
+document.addEventListener("DOMContentLoaded", function(){
 const passwordHash = "c6496946812eb09cc274ad3ab7d8150ec4d72f520f38c12dc659cc04040c42b4";
-
 let input = prompt("Enter password to view analytics:");
-if(!input || sha256(input.trim()) !== passwordHash){
-document.body.innerHTML = "<h2 style='color:red; text-align:center; font-family:Segoe UI;'>Access Denied</h2>";
+if(!input || sha256(input.trim())!==passwordHash){
+document.body.innerHTML="<h2 style='color:red;text-align:center;font-family:Segoe UI;'>Access Denied</h2>";
 return;
 }
 
-// Password correct → show dashboard
-const dashboard = document.getElementById('dashboard');
-dashboard.style.display = "block";
+// Show dashboard
+document.getElementById('dashboard').style.display="block";
 
-// Load counters from localStorage
-let yesCount = parseInt(localStorage.getItem('yesCount') || '0');
-let noCount = parseInt(localStorage.getItem('noCount') || '0');
+// Load counts (read-only, only you can see)
+const yesCount = parseInt(localStorage.getItem('yesCount')||'0');
+const noCount = parseInt(localStorage.getItem('noCount')||'0');
 
 document.getElementById('yesCount').textContent = yesCount;
 document.getElementById('noCount').textContent = noCount;
-
-// Buttons increment
-document.getElementById('incrementYes').onclick = function() {
-yesCount++;
-localStorage.setItem('yesCount', yesCount);
-document.getElementById('yesCount').textContent = yesCount;
-};
-
-document.getElementById('incrementNo').onclick = function() {
-noCount++;
-localStorage.setItem('noCount', noCount);
-document.getElementById('noCount').textContent = noCount;
-};
 });
 </script>
-
 </body>
 </html>
