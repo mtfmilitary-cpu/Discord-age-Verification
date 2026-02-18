@@ -2,41 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Analytics</title>
+<title>Analytics Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <style>
-body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-table { margin: 0 auto; border-collapse: collapse; }
-td, th { border: 1px solid black; padding: 10px 20px; }
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+margin: 0;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(135deg, #1f1c2c, #928dab);
+color: #fff;
+}
+.card {
+background: rgba(0,0,0,0.6);
+padding: 30px 50px;
+border-radius: 15px;
+box-shadow: 0 0 25px rgba(0,0,0,0.7);
+text-align: center;
+width: 90%;
+max-width: 500px;
+}
+h1 {
+font-size: 2rem;
+margin-bottom: 20px;
+color: #ffdd59;
+}
+.counter {
+margin: 20px 0;
+font-size: 1.5rem;
+background: rgba(255,255,255,0.1);
+padding: 15px;
+border-radius: 10px;
+}
+button {
+padding: 10px 20px;
+margin: 10px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-size: 1rem;
+transition: 0.3s ease;
+}
+button#incrementYes { background: #28a745; color: #fff; }
+button#incrementYes:hover { background: #218838; }
+button#incrementNo { background: #dc3545; color: #fff; }
+button#incrementNo:hover { background: #c82333; }
 </style>
 </head>
 <body>
-<h1>Age Verification Analytics</h1>
-<table>
-<tr>
-<th>Choice</th>
-<th>Clicks</th>
-</tr>
-<tr>
-<td>18+</td>
-<td id="yes-count">0</td>
-</tr>
-<tr>
-<td>Under 18</td>
-<td id="no-count">0</td>
-</tr>
-</table>
+
+<div class="card" id="dashboard" style="display:none;">
+<h1>Analytics Dashboard</h1>
+<div class="counter">
+✅ I am 18+: <span id="yesCount">0</span><br>
+❌ Under 18: <span id="noCount">0</span>
+</div>
+<button id="incrementYes">Add I am 18+</button>
+<button id="incrementNo">Add Under 18</button>
+</div>
 
 <script>
-// Optional: simple password protection
-const password = prompt("Enter password to view analytics:");
-if(password !== "133421") {
-document.body.innerHTML = "<h2>Access Denied</h2>";
+const passwordHash = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd1e5..."; // hash of your password
+
+// Prompt user for password
+const input = prompt("Enter password to view analytics:");
+if(sha256(input) !== passwordHash){
+document.body.innerHTML = "<h2 style='color:red;font-family:Segoe UI;text-align:center;'>Access Denied</h2>";
 } else {
-// Read counts from localStorage
-document.getElementById('yes-count').innerText = localStorage.getItem('yes') || 0;
-document.getElementById('no-count').innerText = localStorage.getItem('no') || 0;
+document.getElementById('dashboard').style.display = "block";
 }
+
+// Live counter stored in localStorage
+let yesCount = parseInt(localStorage.getItem('yesCount') || '0');
+let noCount = parseInt(localStorage.getItem('noCount') || '0');
+
+document.getElementById('yesCount').textContent = yesCount;
+document.getElementById('noCount').textContent = noCount;
+
+document.getElementById('incrementYes').onclick = function() {
+yesCount++;
+localStorage.setItem('yesCount', yesCount);
+document.getElementById('yesCount').textContent = yesCount;
+};
+
+document.getElementById('incrementNo').onclick = function() {
+noCount++;
+localStorage.setItem('noCount', noCount);
+document.getElementById('noCount').textContent = noCount;
+};
 </script>
+
 </body>
 </html>
-
