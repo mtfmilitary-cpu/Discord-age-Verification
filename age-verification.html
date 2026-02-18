@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Age Verification</title>
+<style>
+/* Full-page centered layout */
+body {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: linear-gradient(135deg, #4e54c8, #8f94fb);
+color: #fff;
+}
+.container {
+text-align: center;
+background: rgba(0, 0, 0, 0.5);
+padding: 40px 60px;
+border-radius: 12px;
+box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+h1 {
+font-size: 2rem;
+margin-bottom: 20px;
+}
+p {
+font-size: 1rem;
+margin-bottom: 30px;
+}
+button {
+padding: 12px 25px;
+margin: 0 10px;
+font-size: 1rem;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+button#yes {
+background-color: #28a745;
+color: #fff;
+}
+button#yes:hover {
+background-color: #218838;
+}
+button#no {
+background-color: #dc3545;
+color: #fff;
+}
+button#no:hover {
+background-color: #c82333;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Age Verification</h1>
+<p>Please confirm your age to enter the site:</p>
+<button id="yes">I am 18+</button>
+<button id="no">I am under 18</button>
+</div>
+
+<script>
+// Redirect or alert underage users
+document.getElementById('yes').onclick = function() {
+alert("Welcome! You are verified as 18+.");
+// You can redirect verified users if needed:
+// window.location.href = "main-site.html";
+}
+document.getElementById('no').onclick = function() {
+alert("Sorry, you must be 18+ to enter.");
+window.location.href = "https://www.google.com"; // redirect underage users
+}
+</script>
+</body>
+</html>
