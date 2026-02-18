@@ -63,13 +63,19 @@ button#incrementNo:hover { background: #c82333; }
 <button id="incrementNo">Add Under 18</button>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <script>
-const passwordHash = "c6496946812eb09cc274ad3ab7d8150ec4d72f520f38c12dc659cc04040c42b4"; // hash of your password
+const passwordHash = "c6496946812eb09cc274ad3ab7d8150ec4d72f520f38c12dc659cc04040c42b4";
 
-// Prompt user for password
-const input = prompt("Enter password to view analytics:");
+// Prompt user
+let input = prompt("Enter password to view analytics:");
+
+// Remove extra spaces
+input = input.trim();
+
+// Compare hash
 if(sha256(input) !== passwordHash){
-document.body.innerHTML = "<h2 style='color:red;font-family:Segoe UI;text-align:center;'>Access Denied</h2>";
+document.body.innerHTML = "<h2 style='color:red; text-align:center; font-family:Segoe UI;'>Access Denied</h2>";
 } else {
 document.getElementById('dashboard').style.display = "block";
 }
